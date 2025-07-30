@@ -18,6 +18,7 @@ export const verify = async (request, res) => {
 
     const tx = await contract.verifyUser(userAddress, true);
     await tx.wait();
+
     console.log('User Verified\ntxHash:', tx.hash);
     return res.status(200).json({ status: 'status' });
   } catch (error) {
@@ -37,9 +38,8 @@ export const check = async (req, res) => {
       process.env.RPC_PROVIDER_URL
     );
     const contract = new Contract(KYCAddress, KYCverifyABI, provider);
-    const adminAddress = await contract.admin();
-
-    console.log(isVerified);
+    const isVerified = await contract.checkKYC(address);
+    console.log('address verified', isVerified);
     return res.status(200).json({ status: isVerified });
   } catch (error) {
     console.log(error.message);
